@@ -65,40 +65,26 @@ func main() {
 			if str, err := json.Marshal(msg); err != nil {
 				fmt.Printf("error: %v\n", err)
 			} else {
-				log.Debugf("sender: %v, receiver: %v", msg.Sender, msg.Receiver)
 
 				if msg.Receiver == nil {
-					log.Debug("Receiver is null")
 					if msg.Sender != 1 {
-						log.Debug("sending to 1")
 						i1 <- string(str)
-						log.Debug("sent to 1")
 					}
 					if msg.Sender != 2 {
-						log.Debug("sending to 2")
 						i2 <- string(str)
-						log.Debug("sent to 2")
 					}
 					if msg.Sender != 3 {
-						log.Debug("sending to 3")
 						i3 <- string(str)
-						log.Debug("sent to 3")
 					}
 				} else {
 					rcv := msg.Receiver.(float64)
 					switch int(rcv) {
 					case 1:
-						log.Debug("sending to 1")
 						i1 <- string(str)
-						log.Debug("sent to 1")
 					case 2:
-						log.Debug("sending to 2")
 						i2 <- string(str)
-						log.Debug("sent to 2")
 					case 3:
-						log.Debug("sending to 3")
 						i3 <- string(str)
-						log.Debug("sent to 3")
 					}
 				}
 
@@ -108,10 +94,8 @@ func main() {
 		for {
 			select {
 			case <-time.After(3 * time.Second):
-				log.Debug("trying to send")
 				if len(buffer) > 0 {
 					if bufferMu.TryLock() {
-						log.Debugf("buffer has %v items", len(buffer))
 						sort.Sort(buffer)
 
 						send(&buffer[0])
@@ -133,24 +117,15 @@ func main() {
 			select {
 			case str, ok := <-o1:
 				if ok {
-					log.Debugf("sending from o1")
 					addToBuffer(str)
-				} else {
-					log.Error("sending from o1")
 				}
 			case str, ok := <-o2:
 				if ok {
-					log.Debugf("sending from o2")
 					addToBuffer(str)
-				} else {
-					log.Error("sending from o2")
 				}
 			case str, ok := <-o3:
 				if ok {
-					log.Debugf("sending from o3")
 					addToBuffer(str)
-				} else {
-					log.Error("sending from o3")
 				}
 			}
 		}
@@ -159,7 +134,6 @@ func main() {
 		for {
 			select {
 			case <-ch:
-				log.Debug("Ignoring msg")
 			}
 		}
 	}
