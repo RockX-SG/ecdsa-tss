@@ -28,30 +28,11 @@ func NewOfflineStageSimple(msgHash string, i int, sL []int, n int, localKey stri
 
 	buffer := C.malloc(C.size_t(BufferSize))
 
-	slLen := len(sL)
-
-
-	//slLen := C.size_t(len(sL))
-	indices := C.malloc(C.size_t(slLen * C.sizeof_int))
-	defer C.free(indices)
-	//sIndices := *(*[]int)(indices)
-	//copy(sIndices[:], sL[:])
-
-	//indices := make([]int, slLen)
-	indicesS := (*[1 << 30]C.int)(unsafe.Pointer(indices))
+	indices := make([]C.int, len(sL))
 	for i, partyI := range sL {
-		indicesS[i] = C.int(partyI)
+		indices[i] = C.int(partyI)
 	}
-
-	//indices := make([]C.int, len(sL))
-	//for i, partyI := range sL {
-	//	indices[i] = C.int(partyI)
-	//}
-	//C.size_t(len(sL))
-	//(*C.int)(unsafe.Pointer(&indices))
-	//C.int(len(sL))
-	log.Debugf("cKey %v", C.GoString((*C.char)(cKey)))
-	state := C.new_offline_stage(C.int(i), (*C.int)(unsafe.Pointer(&indices)), C.int(len(sL)), cKey)
+	state := C.new_offline_stage(C.int(i), (*C.int)(unsafe.Pointer(&indices[0])), C.int(len(sL)), cKey)
 
 	return &OfflineStageSimple{msgHash, i, n, localKey, state, buffer, nil}
 }

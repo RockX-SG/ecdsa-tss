@@ -250,9 +250,8 @@ func main() {
 			log.WithError(err).Error("failed to decode signature")
 		}
 		log.Debugf("Sig is %v", signature)
-		log.Debug("Sig failed")
 	}else {
-
+		log.Debug("Sig failed")
 	}
 	//sm := sMachines[0].Output()
 	//pSig := sm.GetPartialSignature()

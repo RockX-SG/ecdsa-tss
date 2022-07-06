@@ -302,7 +302,7 @@ pub extern "C" fn new_keygen(i: cty::c_int, t: cty::c_int, n: cty::c_int) -> *mu
 
 #[no_mangle]
 pub extern "C" fn new_offline_stage(i: cty::c_int, s_l: *const cty::c_int, s_l_len: cty::c_int, local_key: *const cty::c_char) -> *mut OfflineStage {
-    let s_l : &[i32] = &[1,2];
+    let s_l: &[i32] = unsafe { slice_from_raw_parts(s_l, s_l_len as usize).as_ref().unwrap() };
     let s_l = s_l.iter().map(|i| *i as u16).collect();
 
     let local_key = unsafe { CStr::from_ptr(local_key).to_bytes() };
@@ -393,11 +393,4 @@ pub extern "C" fn sign_manual_complete(state: Option<&(SignManual, PartialSignat
         }
         None => { ERROR_STATE_IS_NULL }
     }
-}
-
-#[cfg(test)]
-mod test {
-#[test]
-fn test_serde(){
-}
 }
